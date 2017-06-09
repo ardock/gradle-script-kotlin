@@ -4,7 +4,6 @@ import org.gradle.script.lang.kotlin.plugins.AbstractPluginTest
 import org.gradle.testkit.runner.TaskOutcome
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.assertThat
-import org.junit.Ignore
 import org.junit.Test
 
 
@@ -33,7 +32,6 @@ class KotlinDslPluginTest : AbstractPluginTest()
         assertThat(result.task(":compileKotlin").outcome, equalTo(TaskOutcome.SUCCESS))
     }
 
-    @Ignore("Not implemented yet")
     @Test
     fun `sam-with-receiver kotlin compiler plugin is applied to production code`()
     {
