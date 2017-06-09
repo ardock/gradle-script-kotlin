@@ -15,8 +15,7 @@
  */
 package org.gradle.script.lang.kotlin.plugins.embedded
 
-import org.gradle.script.lang.kotlin.fixtures.AbstractIntegrationTest
-import org.gradle.script.lang.kotlin.fixtures.gradleRunnerFor
+import org.gradle.script.lang.kotlin.plugins.AbstractPluginTest
 import org.gradle.testkit.runner.TaskOutcome
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.equalTo
@@ -24,7 +23,7 @@ import org.junit.Assert.assertThat
 import org.junit.Test
 
 
-class EmbeddedKotlinPluginTest : AbstractIntegrationTest() {
+class EmbeddedKotlinPluginTest : AbstractPluginTest() {
 
     @Test
     fun `applies the kotlin plugin`() {
@@ -37,7 +36,7 @@ class EmbeddedKotlinPluginTest : AbstractIntegrationTest() {
 
         """)
 
-        val result = runWithArguments("assemble")
+        val result = buildWithPlugin("assemble")
 
         assertThat(result.task(":compileKotlin").outcome, equalTo(TaskOutcome.NO_SOURCE))
     }
@@ -60,7 +59,7 @@ class EmbeddedKotlinPluginTest : AbstractIntegrationTest() {
 
         """)
 
-        val result = runWithArguments("help")
+        val result = buildWithPlugin("help")
 
         assertThat(result.output, containsString("Embedded Kotlin Repository"))
         embeddedModules.forEach {
@@ -103,7 +102,7 @@ class EmbeddedKotlinPluginTest : AbstractIntegrationTest() {
 
         """)
 
-        val result = runWithArguments("help")
+        val result = buildWithPlugin("help")
 
         embeddedModules.forEach {
             assertThat(result.output, containsString("${it.name}-${it.version}.jar"))
@@ -134,21 +133,13 @@ class EmbeddedKotlinPluginTest : AbstractIntegrationTest() {
 
         """)
 
-        val result = runWithArguments("dependencies")
+        val result = buildWithPlugin("dependencies")
 
         embeddedModules.forEach {
             assertThat(result.output, containsString("${it.group}:${it.name}:1.1.1 -> ${it.version}"))
             assertThat(result.output, containsString("${it.name}-${it.version}.jar"))
         }
     }
-
-
-    private
-    fun runWithArguments(vararg arguments: String) =
-        gradleRunnerFor(projectRoot)
-            .withPluginClasspath()
-            .withArguments(*arguments)
-            .build()
 
 
     private
